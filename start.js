@@ -10,11 +10,10 @@ function getQueryVariable(variable) {
     return null;
 }
 process.nextTick(function() {
-	delete require.cache[module.id];
-	if(typeof window !== "undefined" && window.mochaPhantomJS)
-		mochaPhantomJS.run();
-	else {
-		mocha.run();
+    delete require.cache[module.id];
+    if(typeof window !== "undefined" && window.mochaPhantomJS)
+        mochaPhantomJS.run();
+    else {
         var reporter = getQueryVariable('reporter');
         if (reporter) {
             mocha.reporter(reporter);
