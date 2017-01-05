@@ -18,11 +18,48 @@ process.nextTick(function() {
         if (reporter) {
             mocha.reporter(reporter);
         }
+        var timeout = getQueryVariable('timeout');
+        if (timeout) {
+            mocha.setup({timeout});
+        }
         runner = mocha.run();
         runner.on('end', function() {
             if (reporter === 'json') {
-                document.querySelector('#mocha').innerText = JSON.stringify(runner.testResults);
+                var result = {
+                    stats: runner.testResults.stats,
+                    tests: runner.testResults.tests.map(clean),
+                    failures: runner.testResults.failures.map(clean),
+                    passes: runner.testResults.passes.map(clean),
+                    pending: runner.testResults.pending.map(clean)
+                };
+                document.querySelector('#mocha').innerText = JSON.stringify(result);
             }
         });
     }
 });
+
+/**
+ * Return a plain-object representation of `test`
+ * free of cyclic properties etc.
+ *
+ * @param {Object} test
+ * @return {Object}
+ * @api private
+ */
+
+function clean(test) {
+  var o = {
+      title: test.title
+    , fullTitle: test.fullTitle
+    , duration: test.duration
+  };
+  if (test.hasOwnProperty("err")) {
+    if (test.err.stack) {
+      o.error = test.err.stack.toString();
+    }
+    else if (test.err.message) {
+      o.error = test.err.message;
+    }
+  }
+  return o;
+}
