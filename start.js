@@ -20,7 +20,7 @@ process.nextTick(function() {
         }
         var timeout = getQueryVariable('timeout');
         if (timeout) {
-            mocha.setup({timeout});
+            mocha.setup({timeout: timeout});
         }
         runner = mocha.run();
         runner.on('end', function() {
