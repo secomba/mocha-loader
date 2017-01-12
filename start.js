@@ -18,9 +18,13 @@ process.nextTick(function() {
         if (reporter) {
             mocha.reporter(reporter);
         }
+        var disableTimeouts = getQueryVariable('disableTimeouts');
+        if (disableTimeouts) {
+            mocha.enableTimeouts(false);
+        }
         var timeout = getQueryVariable('timeout');
         if (timeout) {
-            mocha.setup({timeout: timeout});
+            mocha.timeout(timeout);
         }
         runner = mocha.run();
         runner.on('end', function() {
