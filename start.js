@@ -9,6 +9,31 @@ function getQueryVariable(variable) {
     }
     return null;
 }
+
+function log() {
+    var line =  Array.prototype.slice.call(arguments).join(' ')
+    var existing = document.getElementById('log').innerText;
+    var date = new Date();
+    var timestamp = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '-' +  date.getMilliseconds();
+    document.getElementById('log').innerText = '[' + timestamp + '] ' +  line + '\n' + existing;
+}
+
+
+function attachLog(runner) {
+    runner.on('pending', function (test) {
+        log('pending >', test.fullTitle(), test.duration)
+    });
+
+    runner.on('pass', function (test) {
+        log('pass >', test.fullTitle(), test.duration)
+    });
+
+    runner.on('fail', function (test) {
+        log('fail >', test.fullTitle(), test.duration)
+    });
+}
+
+
 process.nextTick(function() {
     delete require.cache[module.id];
     if(typeof window !== "undefined" && window.mochaPhantomJS)
@@ -26,7 +51,14 @@ process.nextTick(function() {
         if (timeout) {
             mocha.timeout(timeout);
         }
+
         runner = mocha.run();
+        var log = getQueryVariable('log');
+        if (log) {
+            console.log = log;
+            console.error = log;
+            attachLog(runner, log);
+        }
         runner.on('end', function() {
             if (reporter === 'json') {
                 var result = {
