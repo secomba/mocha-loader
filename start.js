@@ -53,13 +53,14 @@ process.nextTick(function() {
         }
 
         runner = mocha.run();
-        var log = getQueryVariable('log');
-        if (log) {
+        var logParam = getQueryVariable('log');
+        if (logParam) {
             console.log = log;
             console.error = log;
-            attachLog(runner, log);
+            attachLog(runner);
         }
         runner.on('end', function() {
+            console.log('runner end');
             if (reporter === 'json') {
                 var result = {
                     stats: runner.testResults.stats,
