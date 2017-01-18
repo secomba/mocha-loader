@@ -10,26 +10,35 @@ function getQueryVariable(variable) {
     return null;
 }
 
+function getTimestamp(date) {
+    return '[' +  date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '-' +  date.getMilliseconds() + '] ';
+}
+
 function log() {
     var line =  Array.prototype.slice.call(arguments).join(' ')
     var existing = document.getElementById('log').innerText;
     var date = new Date();
-    var timestamp = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '-' +  date.getMilliseconds();
-    document.getElementById('log').innerText = '[' + timestamp + '] ' +  line + '\n' + existing;
+    var timestamp = getTimestamp(date);
+    document.getElementById('log').innerText = timestamp +  line + '\n' + existing;
 }
 
-
+var totalDuration = 0;
 function attachLog(runner) {
+    var startDate;
+    runner.on('test', function() {
+        startDate = new Date();
+    })
     runner.on('pending', function (test) {
-        log('pending >', test.fullTitle(), test.duration)
+        log(getTimestamp(startDate), test.duration, 'pending >', test.fullTitle() )
     });
 
     runner.on('pass', function (test) {
-        log('pass >', test.fullTitle(), test.duration)
+        totalDuration += test.duration;
+        log(getTimestamp(startDate), test.duration, 'pass >', test.fullTitle())
     });
 
     runner.on('fail', function (test) {
-        log('fail >', test.fullTitle(), test.duration)
+        log(getTimestamp(startDate), test.duration, 'fail >', test.fullTitle())
     });
 }
 
@@ -61,6 +70,7 @@ process.nextTick(function() {
         }
         runner.on('end', function() {
             console.log('runner end');
+            console.log('totalDuration: ', totalDuration);
             if (reporter === 'json') {
                 var result = {
                     stats: runner.testResults.stats,
