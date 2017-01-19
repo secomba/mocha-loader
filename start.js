@@ -25,23 +25,23 @@ function log() {
 var totalDuration = 0;
 function attachLog(runner) {
     var startDate;
-    var lastDate = new Date();;
+    var lastDate = new Date();
     runner.on('test', function() {
         startDate = new Date();
     })
     runner.on('pending', function (test) {
-        log(getTimestamp(startDate), test.duration, 'pending >', test.fullTitle() )
+        log("testDuration=", test.duration, 'pending >', test.fullTitle() )
     });
 
     runner.on('pass', function (test) {
         var msBetween = startDate.getTime() - lastDate.getTime()
         lastDate = new Date();
         totalDuration += test.duration;
-        log(getTimestamp(startDate), test.duration, 'pass >', test.fullTitle())
+        log("msBetween=", msBetween, "testDuration=", test.duration, 'pass >', test.fullTitle())
     });
 
     runner.on('fail', function (test) {
-        log(getTimestamp(startDate), test.duration, 'fail >', test.fullTitle())
+        log("testDuration=", test.duration, 'fail >', test.fullTitle())
     });
 }
 
