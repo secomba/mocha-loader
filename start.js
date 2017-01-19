@@ -65,7 +65,7 @@ process.nextTick(function() {
             mocha.timeout(timeout);
         }
 
-        mocha.globals = ['td'];
+        mocha.globals(['td', 'crypto']);
 
         runner = mocha.run();
         var logParam = getQueryVariable('log');
