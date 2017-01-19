@@ -65,7 +65,7 @@ process.nextTick(function() {
             mocha.timeout(timeout);
         }
 
-        mocha.globals(['td', 'crypto']);
+        mocha.ignoreLeaks(true);
 
         runner = mocha.run();
         var logParam = getQueryVariable('log');
