@@ -24,6 +24,7 @@ function log() {
 
 var totalDuration = 0;
 function attachLog(runner) {
+    localStorage.debug = 'mocha:*'
     var startDate;
     var lastDate = new Date();
     runner.on('test', function() {
@@ -63,6 +64,8 @@ process.nextTick(function() {
         if (timeout) {
             mocha.timeout(timeout);
         }
+
+        mocha.globals = ['td'];
 
         runner = mocha.run();
         var logParam = getQueryVariable('log');
