@@ -25,6 +25,7 @@ function log() {
 var totalDuration = 0;
 function attachLog(runner) {
     var startDate;
+    var lastDate = new Date();;
     runner.on('test', function() {
         startDate = new Date();
     })
@@ -33,6 +34,8 @@ function attachLog(runner) {
     });
 
     runner.on('pass', function (test) {
+        var msBetween = startDate.getTime() - lastDate.getTime()
+        lastDate = new Date();
         totalDuration += test.duration;
         log(getTimestamp(startDate), test.duration, 'pass >', test.fullTitle())
     });
