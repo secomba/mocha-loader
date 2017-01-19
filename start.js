@@ -24,7 +24,6 @@ function log() {
 
 var totalDuration = 0;
 function attachLog(runner) {
-    localStorage.debug = 'mocha:*'
     var startDate;
     var lastDate = new Date();
     runner.on('test', function() {
